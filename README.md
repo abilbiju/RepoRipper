@@ -36,9 +36,9 @@ The AI creates unique, contextual roasts that reference specific stats! 🎯
    Or create a `.env` file (copy from `.env.example`)
 5. Run the app:
    ```bash
-   python app.py
+   python3 app.py
    ```
-6. Open your browser and go to `http://localhost:5000`
+6. Open your browser and go to `http://localhost:5001`
 
 ## Usage
 
