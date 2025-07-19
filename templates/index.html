@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Roaster 🔥</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+        }
+
+        input[type="text"] {
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #ecf0f1;
+            border-radius: 10px;
+            width: 300px;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.2);
+        }
+
+        button {
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            margin: 20px 0;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+            text-align: left;
+            margin-top: 30px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #667eea;
+        }
+
+        .user-details h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .roast-section {
+            background: #fff5f5;
+            border: 2px solid #fed7d7;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .roast-title {
+            color: #e53e3e;
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .roast-list {
+            list-style: none;
+        }
+
+        .roast-list li {
+            background: white;
+            margin: 10px 0;
+            padding: 15px 20px;
+            border-radius: 10px;
+            border-left: 4px solid #e53e3e;
+            font-size: 1.1em;
+            line-height: 1.4;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .error {
+            color: #e53e3e;
+            background: #fed7d7;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .disclaimer {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e8f4fd;
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #2c5282;
+            border-left: 4px solid #3182ce;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            input[type="text"] {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GitHub Roaster 🔥</h1>
+        <p class="subtitle">Enter a GitHub username and get absolutely roasted based on their coding sins</p>
+        
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Enter GitHub username..." />
+            <button onclick="roastUser()">Roast Them! 🔥</button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Preparing the roast... 🍖</p>
+        </div>
+        
+        <div class="results" id="results">
+            <div class="user-info" id="userInfo">
+                <!-- User info will be populated here -->
+            </div>
+            
+            <div class="roast-section">
+                <h2 class="roast-title">🔥 The Roast 🔥</h2>
+                <ul class="roast-list" id="roastList">
+                    <!-- Roasts will be populated here -->
+                </ul>
+            </div>
+        </div>
+        
+        <div class="error" id="error" style="display: none;">
+            <!-- Error messages will appear here -->
+        </div>
+        
+        <div class="disclaimer">
+            <strong>Disclaimer:</strong> This is all in good fun! 😄 We love all developers and their contributions to the coding community. 
+            Keep coding, keep learning, and don't take the roasts too seriously! 💻❤️
+            <br><br>
+            Made by <a href="https://github.com/abilbiju" target="_blank">abilbiju</a> 🚀
+        </div>
+    </div>
+
+    <script>
+        async function roastUser() {
+            const username = document.getElementById('username').value.trim();
+            const button = document.querySelector('button');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const error = document.getElementById('error');
+            
+            if (!username) {
+                showError('Please enter a username, genius 🙄');
+                return;
+            }
+            
+            // Reset UI
+            button.disabled = true;
+            button.textContent = 'Roasting...';
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            error.style.display = 'none';
+            
+            try {
+                const response = await fetch('/roast', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username: username })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    showError(data.error);
+                } else {
+                    showResults(data);
+                }
+            } catch (err) {
+                showError('Something went wrong. Even our roasting skills failed us! 🤦‍♂️');
+            } finally {
+                button.disabled = false;
+                button.textContent = 'Roast Them! 🔥';
+                loading.style.display = 'none';
+            }
+        }
+        
+        function showError(message) {
+            const error = document.getElementById('error');
+            error.textContent = message;
+            error.style.display = 'block';
+        }
+        
+        function showResults(data) {
+            const userInfo = document.getElementById('userInfo');
+            const roastList = document.getElementById('roastList');
+            const results = document.getElementById('results');
+            
+            // Populate user info
+            userInfo.innerHTML = `
+                <img src="${data.avatar_url}" alt="${data.username}" class="avatar">
+                <div class="user-details">
+                    <h3>@${data.username}</h3>
+                    <div class="stats">
+                        <div>📚 Repos: ${data.stats.public_repos}</div>
+                        <div>👥 Followers: ${data.stats.followers}</div>
+                        <div>👤 Following: ${data.stats.following}</div>
+                        <div>📅 Account Age: ${data.stats.account_age_days} days</div>
+                        <div>😀 Emojis Found: ${data.stats.total_emojis}</div>
+                        <div>💻 Languages: ${data.stats.languages_used}</div>
+                    </div>
+                </div>
+            `;
+            
+            // Populate roasts
+            roastList.innerHTML = data.roasts.map(roast => `<li>${roast}</li>`).join('');
+            
+            results.style.display = 'block';
+        }
+        
+        // Allow Enter key to trigger roast
+        document.getElementById('username').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                roastUser();
+            }
+        });
+    </script>
+</body>
+</html>
