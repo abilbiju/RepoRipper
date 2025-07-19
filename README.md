@@ -1,4 +1,5 @@
 # GitHub Roaster 🔥
+Try it here :https://repo-ripper.vercel.app/
 
 A hilarious web app that uses Google's Gemini AI to generate personalized roasts for GitHub users based on their contributions, commit messages, and questionable emoji usage! 
 
